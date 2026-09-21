@@ -50,7 +50,7 @@ void loop() {
 
     if (now - _lastStatusMs >= STATUS_PRINT_INTERVAL_MS) {
         _lastStatusMs = now;
-               status_output_print(
+        status_output_print(
             _latestPacket,
             rain_isWorking(),
             soil_isWorking(),

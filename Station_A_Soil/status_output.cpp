@@ -47,7 +47,7 @@ void status_output_print(const SoilPacket& pkt, bool rainWorking, bool soilWorki
 
     Serial.print(F("[STATUS] "));
 
-    _printFlagLabel(F(" | Dht="), dhtWorking);
+    _printFlagLabel(F("Dht="), dhtWorking);
     if (dhtWorking) {
         Serial.print(F(" ("));
         _printFixed1(pkt.dhtTempC_x10);
@@ -57,7 +57,7 @@ void status_output_print(const SoilPacket& pkt, bool rainWorking, bool soilWorki
     }
     Serial.print(' ');
 
-    _printFlagLabel(F(" | Rain="), rainWorking);
+    _printFlagLabel(F("Rain="), rainWorking);
     if (rainWorking) {
         Serial.print(F(" ("));
         Serial.print(pkt.rainRaw);
@@ -67,7 +67,7 @@ void status_output_print(const SoilPacket& pkt, bool rainWorking, bool soilWorki
     }
     Serial.print(' ');
 
-    _printFlagLabel(F(" | Soil="), soilWorking);
+    _printFlagLabel(F("Soil="), soilWorking);
     if (soilWorking) {
         Serial.print(F(" ("));
         Serial.print(pkt.soilRaw);
@@ -83,7 +83,7 @@ void status_output_print(const SoilPacket& pkt, bool rainWorking, bool soilWorki
     }
     Serial.print(' ');
 
-    _printFlagLabel(F(" | Light="), lightWorking);
+    _printFlagLabel(F("Light="), lightWorking);
     if (lightWorking) {
         Serial.print(F(" ("));
         Serial.print(pkt.lightState == LIGHT_DETECTED ? F("Detected") : F("Dark"));
@@ -94,8 +94,8 @@ void status_output_print(const SoilPacket& pkt, bool rainWorking, bool soilWorki
     _printFlagLabel(F("RF="), radioAvailable);
     Serial.print(' ');
 
-    Serial.print(F("| Mode="));
+    Serial.print(F("Mode="));
     Serial.print(_modeName(SOIL_TO_CUBE_MODE));
-    Serial.print(F(" | Sent="));
+    Serial.print(F(" Sent="));
     Serial.println(lastSendSuccess ? F("Yes") : F("No"));
 }

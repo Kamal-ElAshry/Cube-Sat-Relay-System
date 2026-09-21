@@ -68,5 +68,11 @@ void serial_output_print(const SoilPacket& soil, const CubePacket& cube, bool ra
     Serial.print(cube.bmpPressurePa);
     Serial.print(F("Pa ; Altitude="));
     _printFixed1(cube.bmpAltitudeM_x10);
-    Serial.println(F("m"));
+    Serial.print(F("m ; Current="));
+    Serial.print(cube.current_mA);
+    Serial.print(F("mA ; Voltage="));
+    Serial.print(cube.busVoltage_mV);
+    Serial.print(F("mV ; Power="));
+    Serial.print(cube.power_mW);
+    Serial.println(F("mW"));
 }

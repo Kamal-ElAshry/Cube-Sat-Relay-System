@@ -85,8 +85,9 @@ static_assert(sizeof(SoilPacket) <= RF_PAYLOAD_SIZE, "SoilPacket exceeds NRF24 p
 // ---------------------------------------------------------------------
 // Cube telemetry (CubeSat -> Station B)
 // ---------------------------------------------------------------------
-constexpr uint8_t CUBE_STATUS_MPU_VALID = 0x01;
-constexpr uint8_t CUBE_STATUS_BMP_VALID = 0x02;
+constexpr uint8_t CUBE_STATUS_MPU_VALID    = 0x01;
+constexpr uint8_t CUBE_STATUS_BMP_VALID    = 0x02;
+constexpr uint8_t CUBE_STATUS_INA219_VALID = 0x04;
 
 #pragma pack(push, 1)
 struct CubePacket {
@@ -100,8 +101,15 @@ struct CubePacket {
     int16_t  bmpTempC_x10;        // deg C * 10
     uint32_t bmpPressurePa;       // Pascals, raw
     int16_t  bmpAltitudeM_x10;    // meters * 10, relative to BMP_REFERENCE_PRESSURE_PA
+    int32_t  current_mA;          // INA219 current, milliamps
+    uint16_t busVoltage_mV;       // INA219 bus voltage, millivolts
+    uint32_t power_mW;            // INA219 power, milliwatts
     uint8_t  statusFlags;         // bitmask of CUBE_STATUS_*
 };
 #pragma pack(pop)
 
+// This struct is exactly RF_PAYLOAD_SIZE (32) bytes - there is no
+// remaining headroom in the logical packet. Adding any further field
+// here requires either dropping an existing one or revisiting the fixed
+// 32-byte envelope itself.
 static_assert(sizeof(CubePacket) <= RF_PAYLOAD_SIZE, "CubePacket exceeds NRF24 payload limit");

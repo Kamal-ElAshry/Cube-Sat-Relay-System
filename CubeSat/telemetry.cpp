@@ -1,6 +1,7 @@
 #include "telemetry.h"
 #include "imu.h"
 #include "barometer.h"
+#include "ina219.h"
 
 static SoilPacket _soilCache;
 static bool       _hasSoilData = false;
@@ -8,6 +9,7 @@ static bool       _hasSoilData = false;
 void telemetry_init() {
     imu_init();
     barometer_init();
+    ina219_init();
     _hasSoilData = false;
 }
 
@@ -50,5 +52,19 @@ void telemetry_collectCube(CubePacket& outPacket) {
         outPacket.bmpTempC_x10 = 0;
         outPacket.bmpPressurePa = 0;
         outPacket.bmpAltitudeM_x10 = 0;
+    }
+
+    int32_t  cur;
+    uint16_t volt;
+    uint32_t pwr;
+    if (ina219_read(cur, volt, pwr)) {
+        outPacket.current_mA = cur;
+        outPacket.busVoltage_mV = volt;
+        outPacket.power_mW = pwr;
+        outPacket.statusFlags |= CUBE_STATUS_INA219_VALID;
+    } else {
+        outPacket.current_mA = 0;
+        outPacket.busVoltage_mV = 0;
+        outPacket.power_mW = 0;
     }
 }

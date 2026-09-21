@@ -11,7 +11,7 @@
 
 void status_output_init();
 
-// pkt: the latest CubePacket - Mpu/Bmp "Working" and their printed
+// pkt: the latest CubePacket - Mpu/Bmp/Ina "Working" and their printed
 //      values are derived from pkt.statusFlags and pkt's fields directly.
 // radioAvailable: is the nRF24 chip itself initialized (one physical
 //      radio shared by both links).

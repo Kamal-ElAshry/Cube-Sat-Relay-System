@@ -17,6 +17,7 @@
 #include "telemetry.h"
 #include "imu.h"
 #include "barometer.h"
+#include "ina219.h"
 #include "status_output.h"
 
 static unsigned long _lastSensorMs = 0;
@@ -36,6 +37,7 @@ void loop() {
 
     radio_maintain();
     barometer_maintain(); // non-blocking background retry if BMP180 init failed
+    ina219_maintain();    // non-blocking background retry if INA219 init failed
 
     // Continuously poll for an incoming Soil packet while in the default
     // listening state. This never blocks - available()/read() return
@@ -66,7 +68,7 @@ void loop() {
 
     if (now - _lastStatusMs >= STATUS_PRINT_INTERVAL_MS) {
         _lastStatusMs = now;
-               status_output_print(
+        status_output_print(
             _latestCube,
             radio_isAvailable(),
             telemetry_hasSoilData(),

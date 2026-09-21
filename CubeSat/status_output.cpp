@@ -42,30 +42,31 @@ void status_output_init() {
 
 void status_output_print(const CubePacket& pkt, bool radioAvailable,
                           bool linkAReceived, bool linkBSent) {
-    bool mpuWorking = (pkt.statusFlags & CUBE_STATUS_MPU_VALID) != 0;
-    bool bmpWorking = (pkt.statusFlags & CUBE_STATUS_BMP_VALID) != 0;
+    bool mpuWorking = (pkt.statusFlags & CUBE_STATUS_MPU_VALID)    != 0;
+    bool bmpWorking = (pkt.statusFlags & CUBE_STATUS_BMP_VALID)    != 0;
+    bool inaWorking = (pkt.statusFlags & CUBE_STATUS_INA219_VALID) != 0;
 
     Serial.print(F("[STATUS] "));
 
-    _printFlagLabel(F(" | Mpu="), mpuWorking);
+    _printFlagLabel(F("Mpu="), mpuWorking);
     if (mpuWorking) {
-        Serial.print(F(" (AX= "));
+        Serial.print(F(" (AX="));
         Serial.print(pkt.accelX);
-        Serial.print(F(" AY= "));
+        Serial.print(F(" AY="));
         Serial.print(pkt.accelY);
-        Serial.print(F(" AZ= "));
+        Serial.print(F(" AZ="));
         Serial.print(pkt.accelZ);
-        Serial.print(F(" GX= "));
+        Serial.print(F(" GX="));
         Serial.print(pkt.gyroX);
-        Serial.print(F(" GY= "));
+        Serial.print(F(" GY="));
         Serial.print(pkt.gyroY);
-        Serial.print(F(" GZ= "));
+        Serial.print(F(" GZ="));
         Serial.print(pkt.gyroZ);
         Serial.print(F(")"));
     }
     Serial.print(' ');
 
-    _printFlagLabel(F(" | Bmp="), bmpWorking);
+    _printFlagLabel(F("Bmp="), bmpWorking);
     if (bmpWorking) {
         Serial.print(F(" ("));
         _printFixed1(pkt.bmpTempC_x10);
@@ -77,16 +78,28 @@ void status_output_print(const CubePacket& pkt, bool radioAvailable,
     }
     Serial.print(' ');
 
-    _printFlagLabel(F(" | RF="), radioAvailable);
+    _printFlagLabel(F("Ina="), inaWorking);
+    if (inaWorking) {
+        Serial.print(F(" (Current="));
+        Serial.print(pkt.current_mA);
+        Serial.print(F("mA Voltage="));
+        Serial.print(pkt.busVoltage_mV);
+        Serial.print(F("mV Power="));
+        Serial.print(pkt.power_mW);
+        Serial.print(F("mW)"));
+    }
     Serial.print(' ');
 
-    Serial.print(F(" | LinkA_Mode="));
+    _printFlagLabel(F("RF="), radioAvailable);
+    Serial.print(' ');
+
+    Serial.print(F("LinkA_Mode="));
     Serial.print(_modeName(SOIL_TO_CUBE_MODE));
-    Serial.print(F(" | LinkA_Received="));
+    Serial.print(F(" LinkA_Received="));
     Serial.print(linkAReceived ? F("Yes") : F("No"));
 
-    Serial.print(F(" | LinkB_Mode="));
+    Serial.print(F(" LinkB_Mode="));
     Serial.print(_modeName(CUBE_TO_STATIONB_MODE));
-    Serial.print(F(" | LinkB_Sent="));
+    Serial.print(F(" LinkB_Sent="));
     Serial.println(linkBSent ? F("Yes") : F("No"));
 }
